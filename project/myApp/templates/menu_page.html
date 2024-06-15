@@ -1,0 +1,15 @@
+{% extends "main.html" %} {% block content%}
+
+<div>
+    <h3>best choices for you</h3>
+    <a href="{% url 'choice_predictor'  %}"><button>lets go</button></a>
+</div>
+<div>
+    <h3>institute_wise_trends</h3>
+    <a href="{% url 'institute_wise_trends'  %}"><button>Lets see</button></a>
+</div>
+<div>
+    <h3>branch_wise_trends</h3>
+    <a href="{% url 'branch_wise_trends'  %}"><button>Lets see</button></a>
+</div>
+{% endblock content %}

@@ -1,0 +1,200 @@
+<html lang="en">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Josaa Analysis</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Kalam', cursive;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+      }
+
+      .chart-container {
+        width: 80%;
+        margin: 50px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chart-container">
+      <canvas id="abc123"></canvas>
+    </div>
+
+    <form id="branchTrendsForm" method="post" action="{% url 'branch_trends_show' %}">
+      <br />
+      <select id="cat123" name="cat123" required>
+        <option value="">Select your Category:</option>
+        <option value="OPEN">OPEN</option>
+        <option value="EWS">EWS</option>
+        <option value="OPEN(PwD)">OPEN(PwD)</option>
+        <option value="OBC-NCL">OBC-NCL</option>
+        <option value="SC">SC</option>
+        <option value="ST">ST</option>
+      </select>
+      <br />
+      <select id="iit123" name="iit123" required>
+        <option value="">Select IIT:</option>
+        <option value="IIT Bhubaneswar">IIT Bhubaneswar</option>
+        <option value="IIT Bombay">IIT Bombay</option>
+        <option value="IIT Mandi">IIT Mandi</option>
+        <option value="IIT Delhi">IIT Delhi</option>
+        <option value="IIT Indore">IIT Indore</option>
+        <option value="IIT Kharagpur">IIT Kharagpur</option>
+        <option value="IIT Hyderabad">IIT Hyderabad</option>
+        <option value="IIT Jodhpur">IIT Jodhpur</option>
+        <option value="IIT Kanpur">IIT Kanpur</option>
+        <option value="IIT Gandhinagar">IIT Gandhinagar</option>
+        <option value="IIT Madras">IIT Madras</option>
+        <option value="IIT Guwahati">IIT Guwahati</option>
+        <option value="IIT Patna">IIT Patna</option>
+        <option value="IIT Roorkee">IIT Roorkee</option>
+        <option value="IIT (ISM) Dhanbad">IIT (ISM) Dhanbad</option>
+        <option value="IIT Ropar">IIT Ropar</option>
+        <option value="IIT (BHU) Varanasi">IIT (BHU) Varanasi</option>
+       
+        <option value="IIT Bhilai">IIT Bhilai</option>
+        <option value="IIT Goa">IIT Goa</option>
+        <option value="IIT Palakkad">IIT Palakkad</option>
+        <option value="IIT Tirupati">IIT Tirupati</option>
+        <option value="IIT Jammu">IIT Jammu</option>
+        <option value="IIT Dharwad">IIT Dharwad</option>
+      </select>
+      <br />
+
+      {% csrf_token %}
+      <select id="gen123" name="gen123" required>
+        <option value="">Select gender:</option>
+        <option value="Gender-Neutral">Gender-Neutral</option>
+        <option value="Female-only">Female-only (including Supernumerary)</option>
+      </select>
+      <br />
+      <input type="hidden" name="honeypot" id="honeypot" value="">
+      <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+      <br />
+      <input type="submit" value="Show trends" />
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+      document.getElementById('branchTrendsForm').addEventListener('submit', function(event) {
+        if (document.getElementById('honeypot').value !== '') {
+          event.preventDefault();
+        }
+      });
+
+      var data123 = {
+        labels: [2020, 2021, 2022],
+        datasets: [
+          {% for x in df2 %}
+          {
+            label: '{{ x.Branch }}',
+            data: [
+              {% for y in df1 %}
+                {% if y.Branch == x.Branch %}
+                  {{ y.Closing_rank }},
+                {% endif %}
+              {% endfor %}
+            ],
+            fill: false,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)',
+              'rgba(255, 159, 64, 0.8)',
+              'rgba(240, 120, 50, 0.8)',
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+              'rgba(240, 120, 50, 1)',
+            ],
+            borderWidth: 2,
+          },
+          {% endfor %}
+        ],
+      };
+
+      const ctx123 = document.getElementById('abc123');
+      new Chart(ctx123, {
+        type: 'line',
+        data: {
+          labels: data123.labels,
+          datasets: data123.datasets,
+        },
+        options: {
+          animations: {
+            tension: {
+              duration: 1000,
+              easing: 'linear',
+              from: 0.5,
+              to: 0.1,
+              loop: true,
+            },
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Branch-wise',
+            },
+            legend: {
+              position: 'top',
+              align: 'end',
+            },
+            labels: {
+              textAlign: 'left',
+              color: 'white',
+              boxWidth: 16,
+              font: {
+                size: 12,
+                family: "'Kalam', cursive",
+                lineHeight: 2,
+              },
+            },
+          },
+          elements: {
+            point: {
+              hitRadius: 5,
+              hoverRadius: 8,
+              pointStyle: 'rectRounded',
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                display: true,
+                color: "#595959",
+                lineWidth: 1,
+              },
+              ticks: {
+                color: "white",
+                maxRotation: 45,
+                minRotation: 45,
+              },
+            },
+            y: {
+              grid: {
+                display: true,
+                color: "#595959",
+              },
+              ticks: {
+                color: "white",
+              },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
